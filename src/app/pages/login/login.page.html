@@ -1,0 +1,42 @@
+<main class="login-page">
+  <section class="login-card">
+    <h1>Авторизация</h1>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="login-form">
+      <label>
+        Логин
+        <tui-textfield>
+          <input tuiInput formControlName="login" placeholder="Введите логин" />
+        </tui-textfield>
+      </label>
+      @if (form.controls.login.invalid && form.controls.login.touched) {
+      <p class="error">Логин обязателен (минимум 3 символа)</p>
+      }
+
+      <label>
+        Пароль
+        <tui-textfield>
+          <input tuiInput type="password" formControlName="password" placeholder="Введите пароль" />
+        </tui-textfield>
+      </label>
+      @if (form.controls.password.invalid && form.controls.password.touched) {
+      <p class="error">Пароль обязателен (минимум 3 символа)</p>
+      } @if (error$ | async; as authError) {
+      <p class="error">{{ authError }}</p>
+      }
+
+      <button
+        tuiButton
+        type="submit"
+        size="l"
+        [disabled]="form.invalid || (loginPending$ | async) === true"
+      >
+        Войти
+      </button>
+    </form>
+
+    <p class="hint"><span tuiChip size="s" appearance="secondary">user1 / user1</span></p>
+    <p class="hint"><span tuiChip size="s" appearance="secondary">user2 / user2</span></p>
+    <p class="hint"><span tuiChip size="s" appearance="secondary">user3 / user 3</span></p>
+  </section>
+</main>

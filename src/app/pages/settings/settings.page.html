@@ -1,0 +1,25 @@
+<main class="page">
+  <header class="topbar">
+    <h1>Settings</h1>
+    <nav class="topbar-actions">
+      <a routerLink="/" tuiButton appearance="secondary">К чатам</a>
+      <button tuiButton type="button" appearance="outline" (click)="logout()">Выйти</button>
+    </nav>
+  </header>
+
+  <section class="card">
+    <h2 tuiBadge appearance="secondary">Настройки пользователя</h2>
+
+    @if (user$ | async; as user) {
+      <div class="row">
+        <span>Логин</span>
+        <strong tuiChip size="s">{{ user.login }}</strong>
+      </div>
+      <div class="row">
+        <span>Пароль</span>
+        <strong tuiChip size="s" appearance="outline">{{ user.password }}</strong>
+      </div>
+    }
+  </section>
+</main>
+

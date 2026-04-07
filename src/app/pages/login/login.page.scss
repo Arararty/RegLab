@@ -1,0 +1,37 @@
+.login-page {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+}
+
+.login-card {
+  width: min(460px, 100%);
+  border: 1px solid #d9dee7;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  background: #fff;
+}
+
+.login-form {
+  display: grid;
+  gap: 0.8rem;
+}
+
+label {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.95rem;
+}
+
+.error {
+  margin: 0;
+  color: #d6263f;
+  font-size: 0.9rem;
+}
+
+.hint {
+  margin-top: 1rem;
+  color: #5f6b7a;
+  font-size: 0.9rem;
+}

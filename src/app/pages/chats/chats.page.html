@@ -1,0 +1,116 @@
+<main class="page">
+  <section class="chat-layout">
+    <aside class="sidebar">
+      <header class="profile">
+        <div>
+          <span tuiAvatar="A" size="s"></span>
+          <strong>{{ user()?.login }}</strong>
+          <div class="profile-id">online</div>
+        </div>
+        <div class="profile-actions">
+          <a routerLink="/user" tuiButton appearance="secondary" size="s">Настройки</a>
+          <button tuiButton appearance="outline" size="s" type="button" (click)="logout()">
+            Выйти
+          </button>
+        </div>
+      </header>
+
+      <section class="sidebar-section">
+        <h3>CHANNELS</h3>
+        @if (loadingChats()) {
+          <p class="muted">Загрузка каналов...</p>
+        }
+        @for (chat of chats(); track chat.id) {
+          <button
+            type="button"
+            tuiButton
+            appearance="outline"
+            size="s"
+            class="channel-item"
+            [class.active]="selectedChat()?.id === chat.id"
+            (click)="selectChat(chat.id)"
+          >
+            #{{ chat.name }}
+          </button>
+        }
+        <form [formGroup]="channelForm" (ngSubmit)="createChannel()" class="mini-form">
+          <tui-textfield>
+            <input tuiInput formControlName="name" placeholder="Название канала" />
+          </tui-textfield>
+          <button tuiButton type="submit" appearance="secondary" [disabled]="channelForm.invalid">
+            + Добавить канал
+          </button>
+        </form>
+      </section>
+
+      <section class="sidebar-section users">
+        <h3>USERS</h3>
+        @for (member of channelMembers(); track member.id) {
+          <div class="user-row">
+            <span class="dot" [tuiStatus]="member.isOnline ? 'positive' : 'negative'"></span>
+            <span tuiChip size="s" appearance="outline">{{ member.username | titlecase }}</span>
+          </div>
+        }
+
+        <form
+          [formGroup]="userForm"
+          (ngSubmit)="addExistingUserToSelectedChannel()"
+          class="mini-form"
+        >
+          <tui-textfield>
+            <input tuiInput formControlName="username" placeholder="Логин пользователя" />
+          </tui-textfield>
+          <button tuiButton type="submit" appearance="secondary" [disabled]="userForm.invalid">
+            + Добавить в канал
+          </button>
+        </form>
+      </section>
+    </aside>
+
+    <article class="chat-window">
+      <h2>#{{ selectedChat()?.name || 'general' }}</h2>
+      <div
+        class="messages"
+        [class.messages--loading]="messagesPanelLoading()"
+        [attr.aria-busy]="messagesPanelLoading()"
+      >
+        @if (messagesPanelLoading()) {
+          <div class="messages-loading-pane">
+            <tui-loader size="xl" [textContent]="messagesLoaderHint" />
+          </div>
+        } @else if (displayMessages().length === 0) {
+          <div class="messages-empty">
+            <img
+              class="messages-empty-gif"
+              [src]="emptyChannelGifSrc"
+              width="320"
+              height="240"
+              alt=""
+              loading="lazy"
+              decoding="async"
+            />
+            <p class="empty">Пока нет сообщений</p>
+          </div>
+        } @else {
+          @for (message of displayMessages(); track message.id) {
+            <div class="message">
+              <div class="author" tuiChip size="s" appearance="secondary">
+                {{ message.authorName }}
+              </div>
+              <div class="content">{{ message.content }}</div>
+            </div>
+          }
+        }
+      </div>
+
+      <form [formGroup]="messageForm" (ngSubmit)="send()" class="send-form">
+        <tui-textfield>
+          <textarea tuiTextarea formControlName="text" placeholder="Введите сообщение"></textarea>
+        </tui-textfield>
+        <button tuiButton type="submit" [disabled]="messageForm.invalid || sendingMessage()">
+          Отправить
+        </button>
+      </form>
+    </article>
+  </section>
+</main>
